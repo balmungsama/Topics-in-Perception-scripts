@@ -1,5 +1,5 @@
 # for loop looping through each subject
-subjDirs=(0004) #(0003 0004)
+subjDirs=(0003 0004) 
 anatom=0005
 functDirs=(0008 0009)
 smooths=(2 4 6 8)
