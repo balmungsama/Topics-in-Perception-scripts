@@ -75,7 +75,7 @@ for subj in ${subjDirs[@]}; do
 		# 3dWarp -deoblique -prefix $functFile'_deobl' $functFile.nii.gz
 
 		# align to the middle volume
-		3dvolreg -zpad 4 -prefix $functFile"_vr" -dfile $functFile"_vr.1D" -base $motFile+orig\[87\] -verbose $functFile"_deobl"+orig   
+		3dvolreg -zpad 4 -prefix $functFile"_vr" -dfile $functFile"_vr.1D" -base $motFile'_deobl+orig'\[87\] -verbose $functFile"_deobl"+orig   
 
 		# Inspect the motion correction parameters:
 		# less 0003_t1_mprage_sag_p2_iso_5_vr.1D
