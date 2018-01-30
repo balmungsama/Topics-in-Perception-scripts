@@ -32,7 +32,8 @@ for subj in ${subjDirs[@]}; do
 	mkdir matlab
 	mkdir masks
 
-	### FUNCTIONAL ###
+	## get nifti files
+
 	for funct in ${functDirs[@]}; do
 
 		cd $topDir/$subj
@@ -42,15 +43,26 @@ for subj in ${subjDirs[@]}; do
 		cd ref_data
 		dcm2niix -o . -z y -f $subj"_%p_%s" ../dicom/$funct
 
+		# deoblique the functional nifti
+		3dWarp -deoblique -prefix $functFile'_deobl' $functFile.nii.gz
+
+	done
+
+	### FUNCTIONAL ###
+
+	for funct in ${functDirs[@]}; do
+
+		cd $topDir/$subj
+
+		# define volume to use as reference in motion correction
+		motRef=$(ls $subj*$(expr 9).nii.gz)
+
 		# get functional filename
 		functFile=$(ls $subj*$(expr $funct + 0).nii.gz)
 		functFile=$(basename $functFile .nii.gz)
 
-		# deoblique the functional nifti
-		3dWarp -deoblique -prefix $functFile'_deobl' $functFile.nii.gz
-
 		# align to the middle volume
-		3dvolreg -zpad 4 -prefix $functFile"_vr" -dfile $functFile"_vr.1D" -base $functFile"_deobl"+orig\[87\] -verbose $functFile"_deobl"+orig   
+		3dvolreg -zpad 4 -prefix $functFile"_vr" -dfile $functFile"_vr.1D" -base $motRef"_deobl"+orig\[87\] -verbose $functFile"_deobl"+orig   
 
 		# Inspect the motion correction parameters:
 		# less 0003_t1_mprage_sag_p2_iso_5_vr.1D
