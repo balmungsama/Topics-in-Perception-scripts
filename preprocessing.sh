@@ -70,7 +70,20 @@ for subj in ${subjDirs[@]}; do
 		### SMOOTHING ###
 		for smooth in ${smooths[@]}; do
 			# smoothing (repeat for 2,4,6,8 mm FWHM smoothing)
-			3dmerge -1blur_fwhm $smooth -doall -prefix $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'_norm+orig' $functFile"_vr_al"+orig		
+
+			if [ "$smooth" = "0" ]; then
+				cp $functFile"_vr_al"+orig.BRIK $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'+orig'.BRIK
+				cp $functFile"_vr_al"+orig.HEAD $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'+orig'.HEAD
+			else 
+				3dmerge -1blur_fwhm $smooth -doall -prefix $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'+orig' $functFile"_vr_al"+orig	
+			fi	
+
+			# calculate the signal mean
+			3dTstat -prefix $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'_mean+orig' $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'+orig'
+
+			# normalize to percent signal change
+			3dcalc -a $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'+orig' -b $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'_mean+orig' -expr 'min(200,a/b*100)-100' -float -prefix $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'_norm+orig'
+
 
 		done
 	
