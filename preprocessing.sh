@@ -70,7 +70,7 @@ for subj in ${subjDirs[@]}; do
 		### SMOOTHING ###
 		for smooth in ${smooths[@]}; do
 			# smoothing (repeat for 2,4,6,8 mm FWHM smoothing)
-			3dmerge -1blur_fwhm $smooth -doall -prefix $functFile"_vr_al_sm"$smooth $functFile"_vr_al"+orig		
+			3dmerge -1blur_fwhm $smooth -doall -prefix $subj'_FPO_localizer_0'$(expr $funct + 0)'_sm'$smooth'_norm+orig' $functFile"_vr_al"+orig		
 
 		done
 	
