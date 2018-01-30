@@ -68,11 +68,14 @@ for subj in ${subjDirs[@]}; do
 		functFile=$(ls $subj*$(expr $funct + 0).nii.gz)
 		functFile=$(basename $functFile .nii.gz)
 
+		motFile=$(ls $subj*$(expr $motRef + 0).nii.gz)
+		motFile=$(basename $motFile .nii.gz)
+
 		# # deoblique the functional nifti
 		# 3dWarp -deoblique -prefix $functFile'_deobl' $functFile.nii.gz
 
 		# align to the middle volume
-		3dvolreg -zpad 4 -prefix $functFile"_vr" -dfile $functFile"_vr.1D" -base $subj*$(expr $motRef + 0)+orig\[87\] -verbose $functFile"_deobl"+orig   
+		3dvolreg -zpad 4 -prefix $functFile"_vr" -dfile $functFile"_vr.1D" -base $motFile+orig\[87\] -verbose $functFile"_deobl"+orig   
 
 		# Inspect the motion correction parameters:
 		# less 0003_t1_mprage_sag_p2_iso_5_vr.1D
