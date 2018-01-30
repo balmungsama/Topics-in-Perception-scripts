@@ -61,7 +61,7 @@ for subj in ${subjDirs[@]}; do
 
 		# convert functional dicoms to nifti
 
-		# cd ref_data
+		cd ref_data
 		# dcm2niix -o . -z y -f $subj"_%p_%s" ../dicom/$funct
 
 		# get functional filename
