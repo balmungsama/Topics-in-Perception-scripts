@@ -33,7 +33,6 @@ for subj in ${subjDirs[@]}; do
 	mkdir matlab
 	mkdir masks
 
-	### FUNCTIONAL ###
 	for funct in ${functDirs[@]}; do
 
 		cd $topDir/$subj
@@ -43,12 +42,34 @@ for subj in ${subjDirs[@]}; do
 		cd ref_data
 		dcm2niix -o . -z y -f $subj"_%p_%s" ../dicom/$funct
 
+		functFile=$(ls $subj*$(expr $funct + 0).nii.gz)
+		functFile=$(basename $functFile .nii.gz)
+
 		# get functional filename
 		functFile=$(ls $subj*$(expr $funct + 0).nii.gz)
 		functFile=$(basename $functFile .nii.gz)
 
 		# deoblique the functional nifti
 		3dWarp -deoblique -prefix $functFile'_deobl' $functFile.nii.gz
+
+	done
+
+	### FUNCTIONAL ###
+	for funct in ${functDirs[@]}; do
+
+		cd $topDir/$subj
+
+		# convert functional dicoms to nifti
+
+		# cd ref_data
+		# dcm2niix -o . -z y -f $subj"_%p_%s" ../dicom/$funct
+
+		# get functional filename
+		functFile=$(ls $subj*$(expr $funct + 0).nii.gz)
+		functFile=$(basename $functFile .nii.gz)
+
+		# # deoblique the functional nifti
+		# 3dWarp -deoblique -prefix $functFile'_deobl' $functFile.nii.gz
 
 		# align to the middle volume
 		3dvolreg -zpad 4 -prefix $functFile"_vr" -dfile $functFile"_vr.1D" -base $subj*$(expr $motRef + 0)+orig\[87\] -verbose $functFile"_deobl"+orig   
